@@ -60,3 +60,54 @@
 | 58 | Silver | Add batch-level summary output for processed entities, row counts, and failures                                                   | Parked                           |
 | 59 | Silver | Add retry/recovery strategy for failed Silver entities                                                                            | Parked                           |
 | 60 | Silver | Add job-level alerting/notifications for Silver processing                                                                        | Parked                           |
+|  61 | Gold  | Create centralized `get_gold_config()` function                                                                             | To Do  |
+|  62 | Gold  | Move loose Gold config variables inside `get_gold_config()`                                                                 | To Do  |
+|  63 | Gold  | Update Gold functions to accept `config` explicitly instead of relying on notebook-level variables                          | To Do  |
+|  64 | Gold  | Create reusable `read_silver_tables(config)` function                                                                       | To Do  |
+|  65 | Gold  | Create reusable `write_gold_table(config, df, table_name)` function                                                         | To Do  |
+|  66 | Gold  | Create main driver function `run_gold_processing()`                                                                         | To Do  |
+|  67 | Gold  | Move all Gold table build logic inside `run_gold_processing()`                                                              | To Do  |
+|  68 | Gold  | Keep final Gold execution cell minimal: `gold_results = run_gold_processing()`                                              | To Do  |
+|  69 | Gold  | Reorganize Gold notebook sections: config, imports, source reads, aggregation functions, write function, driver, validation | To Do  |
+|  70 | Gold  | Remove temporary debug displays from Gold notebook                                                                          | To Do  |
+|  71 | Gold  | Add docstrings/comments to Gold transformation functions                                                                    | To Do  |
+|  72 | Gold  | Validate all Gold table locations after refactor                                                                            | To Do  |
+|  73 | Gold  | Validate row counts for all Gold tables after refactor                                                                      | To Do  |
+|  74 | Gold  | Validate `brand_weekly_performance` grain: one row per `week_start_date + product_id`                                       | To Do  |
+|  75 | Gold  | Validate `hcp_engagement` grain: one row per `hcp_id`                                                                       | To Do  |
+|  76 | Gold  | Validate `territory_performance` grain: one row per `territory_id`                                                          | To Do  |
+|  77 | Gold  | Validate `call_rx_correlation` grain: one row per `week_start_date + hcp_id + product_id + territory_id`                    | To Do  |
+|  78 | Gold  | Add duplicate-grain validation checks for all Gold tables                                                                   | To Do  |
+|  79 | Gold  | Add null-check validation for key Gold dimensions                                                                           | To Do  |
+|  80 | Gold  | Add Gold table row count summary query                                                                                      | To Do  |
+|  81 | Gold  | Add Gold table freshness validation using `gold_load_ts`                                                                    | To Do  |
+|  82 | Gold  | Add Gold validation SQL queries for dashboard/reporting use                                                                 | To Do  |
+|  83 | Gold  | Update README with Gold table purpose, grain, source tables, and output paths                                               | To Do  |
+|  84 | Gold  | Document business meaning of each Gold metric                                                                               | To Do  |
+|  85 | Gold  | Document Gold lineage from Silver source tables                                                                             | To Do  |
+|  86 | Gold  | Add Gold layer to final architecture diagram                                                                                | To Do  |
+|  87 | Gold  | Prepare Gold notebook for future Databricks Job scheduling                                                                  | Done   |
+|  88 | Gold  | Validate Gold notebook execution through Databricks Job                                                                     | Done   |
+|  89 | Gold  | Add SQL Warehouse validation query for Gold table row counts                                                                | Done   |
+|  90 | Gold  | Add SQL Warehouse validation query for Gold data load checks                                                                | Done   |
+|  91 | Gold  | Add Gold audit log table similar to Bronze audit log                                                                        | Parked |
+|  92 | Gold  | Capture Gold row counts, load status, start time, end time, and error message                                               | Parked |
+|  93 | Gold  | Add batch-level summary output for processed Gold tables                                                                    | Parked |
+|  94 | Gold  | Replace full overwrite pattern with incremental/upsert pattern where applicable                                             | Parked |
+|  95 | Gold  | Add retry/recovery strategy for failed Gold table builds                                                                    | Parked |
+|  96 | Gold  | Add job-level alerting/notifications for Gold failures                                                                      | Parked |
+|  97 | Gold  | Add performance optimization using partitioning where useful                                                                | Parked |
+|  98 | Gold  | Evaluate `OPTIMIZE` and `ZORDER` strategy for Gold tables                                                                   | Parked |
+|  99 | Gold  | Add data quality thresholds for business metrics                                                                            | Parked |
+| 100 | Gold  | Create Gold semantic/business views for dashboard users                                                                     | Parked |
+| 101 | Gold  | Add metric definitions table for reusable KPI documentation                                                                 | Parked |
+| 102 | Gold  | Add dashboard on top of Gold monitoring queries                                                                             | Parked |
+| 103 | Gold  | Add data freshness dashboard for Bronze, Silver, and Gold                                                                   | Parked |
+| 104 | Gold  | Add comparison checks between Silver source counts and Gold aggregate totals                                                | Parked |
+| 105 | Gold  | Move Gold table configuration to Delta config table                                                                         | Parked |
+| 106 | Gold  | Parameterize Gold write mode instead of hardcoding overwrite                                                                | Parked |
+| 107 | Gold  | Add unit-style validation queries for each Gold table                                                                       | Parked |
+| 108 | Gold  | Add business anomaly checks for sudden drops/spikes in calls or prescriptions                                               | Parked |
+| 109 | Gold  | Add query history analysis for Gold SQL usage and dashboard performance                                                     | Parked |
+| 110 | Gold  | Update final project README with orchestration, monitoring, and Gold outputs                                                | To Do  |
+| 111| All | Add query history view for query performance management | To Do

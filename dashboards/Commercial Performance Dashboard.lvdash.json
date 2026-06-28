@@ -1,0 +1,371 @@
+{
+  "datasets": [
+    {
+      "name": "9fe17027",
+      "displayName": "01_KPI_Summary",
+      "queryLines": [
+        "SELECT\r\n",
+        "    SUM(total_prescriptions) AS total_prescriptions,\r\n",
+        "    SUM(total_calls) AS total_calls,\r\n",
+        "    SUM(completed_calls) AS completed_calls,\r\n",
+        "\r\n",
+        "    ROUND(\r\n",
+        "        SUM(completed_calls) / NULLIF(SUM(total_calls), 0),\r\n",
+        "        2\r\n",
+        "    ) AS overall_call_completion_rate,\r\n",
+        "\r\n",
+        "    COUNT(DISTINCT brand) AS total_brands,\r\n",
+        "    COUNT(DISTINCT therapy_area) AS total_therapy_areas,\r\n",
+        "\r\n",
+        "    MAX(week_start_date) AS latest_week_start_date\r\n",
+        "FROM cdl.gold.vw_brand_weekly_performance;"
+      ],
+      "catalog": "cdl",
+      "schema": "gold"
+    },
+    {
+      "name": "511c265a",
+      "displayName": "02_Brand_Weekly_Performance",
+      "queryLines": [
+        "SELECT\r\n",
+        "    week_start_date,\r\n",
+        "    -- week_end_date,\r\n",
+        "    brand,\r\n",
+        "    therapy_area,\r\n",
+        "    total_prescriptions,\r\n",
+        "    total_calls,\r\n",
+        "    completed_calls,\r\n",
+        "    call_completion_rate,\r\n",
+        "    rx_per_prescribing_hcp\r\n",
+        "FROM cdl.gold.vw_brand_weekly_performance\r\n",
+        "ORDER BY week_start_date, brand;"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "c7e232da",
+      "displayName": "Rx and Calls",
+      "layout": [
+        {
+          "widget": {
+            "name": "brand-performance-by-prescription-volume",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "511c265a",
+                  "fields": [
+                    {
+                      "name": "therapy_area",
+                      "expression": "`therapy_area`"
+                    },
+                    {
+                      "name": "sum(total_calls)",
+                      "expression": "SUM(`total_calls`)"
+                    },
+                    {
+                      "name": "sum(rx_per_prescribing_hcp)",
+                      "expression": "SUM(`rx_per_prescribing_hcp`)"
+                    },
+                    {
+                      "name": "brand",
+                      "expression": "`brand`"
+                    },
+                    {
+                      "name": "sum(total_prescriptions)",
+                      "expression": "SUM(`total_prescriptions`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Brand Performance by Prescription Volume\n"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "brand",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_prescriptions)",
+                  "displayName": "Total Rx",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "therapy_area",
+                  "displayName": " ",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "extra": [
+                  {
+                    "fieldName": "sum(total_calls)",
+                    "displayName": "Total Calls"
+                  },
+                  {
+                    "fieldName": "sum(rx_per_prescribing_hcp)",
+                    "displayName": "Rx per HCP"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "total-calls",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9fe17027",
+                  "fields": [
+                    {
+                      "name": "monthly(latest_week_start_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    },
+                    {
+                      "name": "sum(total_calls)",
+                      "expression": "SUM(`total_calls`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Calls",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_calls)"
+                },
+                "period": {
+                  "fieldName": "monthly(latest_week_start_date)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "c215b4f4",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9fe17027",
+                  "fields": [
+                    {
+                      "name": "monthly(latest_week_start_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    },
+                    {
+                      "name": "sum(total_prescriptions)",
+                      "expression": "SUM(`total_prescriptions`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Rx",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_prescriptions)"
+                },
+                "period": {
+                  "fieldName": "monthly(latest_week_start_date)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "c6c760ec",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9fe17027",
+                  "fields": [
+                    {
+                      "name": "monthly(latest_week_start_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    },
+                    {
+                      "name": "sum(completed_calls)",
+                      "expression": "SUM(`completed_calls`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Completed Calls",
+                "headerAlignment": "center",
+                "showDescription": false
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(completed_calls)"
+                },
+                "period": {
+                  "fieldName": "monthly(latest_week_start_date)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "46288720",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9fe17027",
+                  "fields": [
+                    {
+                      "name": "monthly(latest_week_start_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    },
+                    {
+                      "name": "sum(total_brands)",
+                      "expression": "SUM(`total_brands`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `latest_week_start_date`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Brands",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_brands)"
+                },
+                "period": {
+                  "fieldName": "monthly(latest_week_start_date)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
